@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área do Cliente | JCSTREAM</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bgDark: '#0b0e14',
+            cardDark: '#121722',
+            cardInner: '#181f2e',
+            cardBorder: '#232d3f',
+            accentBlue: '#0066ff',
+            accentBlueHover: '#0052cc',
+            textMuted: '#8c9ba5'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0e14;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    #vpn-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .line {
+      position: absolute;
+      background-color: #1a365d;
+      opacity: 0;
+      transform-origin: left center;
+      overflow: hidden;
+    }
+
+    .line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 30px;
+      background: linear-gradient(90deg, transparent, #0066ff, #ffffff, #0066ff, transparent);
+      box-shadow: 0 0 10px 2px #0066ff;
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    @keyframes lightTravelPercent {
+      0% { left: 100%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: -30px; opacity: 0; }
+    }
+
+    .light-pulse::after {
+      animation: lightTravelPercent 2s infinite linear;
+    }
+
+    @keyframes centralPulse {
+      0%, 100% {
+        box-shadow: 0 0 20px 5px rgba(0, 102, 255, 0.7);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 35px 10px rgba(0, 102, 255, 0.9), 0 0 10px 2px #ffffff;
+        transform: scale(1.1);
+      }
+    }
+
+    .central-node-pulsing {
+      animation: centralPulse 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+
+  <!-- Fundo Animado da VPN -->
+  <div id="vpn-background"></div>
+
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Header Section com Logomarca JCSTREAM 4X MAIOR -->
+    <header class="mb-8 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex-1 text-center md:text-left">
+        <h1 class="text-3xl font-bold text-white tracking-tight">Área do Cliente</h1>
+        <p class="text-textMuted text-sm mt-1">
+          Revise seus dados de acesso, escolha a opção de renovação que mais combina com você e finalize o pagamento com segurança.
+        </p>
+      </div>
+      <!-- Logo Marca JCSTREAM 4x Maior na Página Principal -->
+      <div class="flex-shrink-0 flex justify-center md:justify-end w-full md:w-auto">
+        <svg class="h-48 w-auto max-w-[450px] drop-shadow-2xl transition-all duration-300 hover:scale-105" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Linhas estilizadas vazadas com opacidade -->
+          <path d="M595 195 L615 215 L215 615 L195 595 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <path d="M645 305 L665 325 L265 725 L245 705 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <path d="M445 405 L465 425 L365 525 L345 505 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <path d="M795 405 L815 425 L665 575 L645 555 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <!-- Texto JCSTREAM em vermelho vibrante -->
+          <text x="500" y="730" font-family="'Arial Black', 'Impact', sans-serif" font-weight="900" font-size="115" fill="#DC2626" text-anchor="middle" letter-spacing="-2">JCSTREAM</text>
+        </svg>
+      </div>
+    </header>
+
+    <!-- CARD 1: Plano Atual -->
+    <div class="bg-cardDark border border-cardBorder rounded-xl p-6 shadow-xl space-y-6 relative z-10">
+      <div class="text-xs font-semibold uppercase tracking-wider text-textMuted">Plano atual</div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <span class="bg-emerald-900/40 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              ATIVO
+            </span>
+          </div>
+        </div>
+        
+        <div class="flex flex-col items-start sm:items-end gap-1">
+          <button onclick="scrollToRenewal()" class="bg-accentBlue hover:bg-accentBlueHover text-white font-medium text-sm px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20 active:scale-95">
+            <i class="fa-solid fa-bolt text-xs"></i>
+            Renove agora
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner de Alerta -->
+      <div class="bg-amber-950/30 border border-amber-600/30 rounded-lg p-3.5 text-xs text-amber-200/90 flex flex-col gap-1">
+        <span class="font-bold text-amber-500">Renove antes que seu acesso seja interrompido</span>
+        <span>Renove agora para manter seu acesso ativo e evitar a interrupção do serviço mais tarde.</span>
+      </div>
+
+      <!-- Grid de Metadados -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-cardInner border border-cardBorder rounded-lg p-3.5">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-textMuted">PLANO ATUAL</span>
+          <span class="block text-xs font-bold text-white mt-1 flex items-center gap-1" id="current-plan-display-name">
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i> 01 MÊS COMPLETO S/ ADULTOS <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+          </span>
+        </div>
+
+        <div class="bg-cardInner border border-cardBorder rounded-lg p-3.5">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-textMuted">DATA DE VENCIMENTO</span>
+          <span class="block text-xs font-bold text-white mt-1">18/09/2026, 23:59:59</span>
+        </div>
+
+        <div class="bg-cardInner border border-cardBorder rounded-lg p-3.5">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-textMuted">DISPOSITIVOS SIMULTÂNEOS</span>
+          <span class="block text-xs font-bold text-white mt-1">2</span>
+        </div>
+      </div>
+
+      <!-- Seletor Tipo de Plano -->
+      <div class="space-y-2">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-textMuted">TIPO DE PLANO</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="plan-type-with-adult" onclick="selectPlanType('with_adult')" class="bg-cardInner border border-cardBorder hover:border-accentBlue/50 cursor-pointer rounded-lg p-3 transition-all">
+            <div class="flex items-center gap-1 text-xs font-bold text-white">
+              <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+              01 MÊS COMPLETO C/ ADULTOS
+              <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            </div>
+            <div class="text-[11px] text-textMuted mt-0.5">Com conteúdo adulto</div>
+          </div>
+
+          <div id="plan-type-no-adult" onclick="selectPlanType('no_adult')" class="bg-cardInner border-2 border-accentBlue rounded-lg p-3 cursor-pointer transition-all">
+            <div class="flex items-center gap-1 text-xs font-bold text-white">
+              <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+              01 MÊS COMPLETO S/ ADULTOS
+              <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            </div>
+            <div class="text-[11px] text-textMuted mt-0.5">Sem conteúdo adulto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- CARD 2: Opções de renovação -->
+    <div id="renovacao-section" class="bg-cardDark border border-cardBorder rounded-xl p-6 shadow-xl space-y-6 relative z-10">
+      <div class="text-xs font-semibold uppercase tracking-wider text-textMuted">Opções de renovação</div>
+
+      <!-- Filtro Tipo de Plano -->
+      <div class="space-y-3">
+        <div>
+          <div class="text-xs font-bold uppercase tracking-wider text-white">ESCOLHA O TIPO DE PLANO</div>
+          <p class="text-textMuted text-xs mt-0.5">Escolha a opção que você quer incluir neste plano.</p>
+        </div>
+
+        <div class="space-y-2">
+          <div id="filter-padrao" onclick="setAdultContent(false)" class="bg-cardInner border-2 border-accentBlue rounded-lg p-3 cursor-pointer transition-all">
+            <div class="text-xs font-bold text-white">Padrão</div>
+            <div class="text-[11px] text-textMuted">Sem conteúdo adulto</div>
+          </div>
+
+          <div id="filter-adulto" onclick="setAdultContent(true)" class="bg-cardInner border border-cardBorder hover:border-accentBlue/50 rounded-lg p-3 cursor-pointer transition-all">
+            <div class="text-xs font-bold text-white">Adulto incluso</div>
+            <div class="text-[11px] text-textMuted">Com conteúdo adulto</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards de Opções -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <!-- Plano 1 mês (R$ 35,00) -->
+        <div id="card-plan-1" onclick="selectRenovacaoPlan(1, 35)" class="border-2 border-accentBlue bg-cardInner/60 rounded-xl p-4 cursor-pointer relative transition-all">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full border-2 border-accentBlue flex items-center justify-center" id="radio-outer-1">
+                <div class="w-2 h-2 rounded-full bg-accentBlue" id="radio-dot-1"></div>
+              </div>
+              <span class="text-xs text-textMuted font-medium" id="select-text-1">Plano selecionado</span>
+            </div>
+            <span class="text-sm font-extrabold text-accentBlue">R$ 35,00</span>
+          </div>
+
+          <div class="mt-3 font-bold text-xs text-white flex items-center gap-1">
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            <span id="plan-title-1">01 MÊS COMPLETO S/ ADULTOS</span>
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+          </div>
+
+          <div class="mt-1 text-[11px] text-textMuted flex items-center gap-3">
+            <span>1 Mês</span>
+            <span>2 dispositivos simultâneos</span>
+          </div>
+
+          <span class="absolute right-3 bottom-3 bg-accentBlue text-white text-[10px] font-bold px-2 py-0.5 rounded" id="badge-1">
+            SELECIONADO
+          </span>
+        </div>
+
+        <!-- Plano 3 meses (R$ 75,00) -->
+        <div id="card-plan-3" onclick="selectRenovacaoPlan(3, 75)" class="border border-cardBorder bg-cardInner rounded-xl p-4 cursor-pointer relative transition-all hover:border-accentBlue/50">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center" id="radio-outer-3">
+                <div class="w-2 h-2 rounded-full bg-transparent" id="radio-dot-3"></div>
+              </div>
+              <span class="text-xs text-textMuted font-medium" id="select-text-3">Clique para selecionar este plano</span>
+            </div>
+            <span class="text-sm font-extrabold text-accentBlue">R$ 75,00</span>
+          </div>
+
+          <div class="mt-3 font-bold text-xs text-white flex items-center gap-1">
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            <span id="plan-title-3">03 MESES COMPLETO S/ ADULTOS</span>
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+          </div>
+
+          <div class="mt-1 text-[11px] text-textMuted flex items-center gap-3">
+            <span>3 Meses</span>
+            <span>2 dispositivos simultâneos</span>
+          </div>
+
+          <span class="absolute right-3 bottom-3 bg-gray-700/80 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded" id="badge-3">
+            SELECIONE
+          </span>
+        </div>
+
+        <!-- Plano 6 meses (R$ 150,00) -->
+        <div id="card-plan-6" onclick="selectRenovacaoPlan(6, 150)" class="border border-cardBorder bg-cardInner rounded-xl p-4 cursor-pointer relative transition-all hover:border-accentBlue/50">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center" id="radio-outer-6">
+                <div class="w-2 h-2 rounded-full bg-transparent" id="radio-dot-6"></div>
+              </div>
+              <span class="text-xs text-textMuted font-medium" id="select-text-6">Clique para selecionar este plano</span>
+            </div>
+            <span class="text-sm font-extrabold text-accentBlue">R$ 150,00</span>
+          </div>
+
+          <div class="mt-3 font-bold text-xs text-white flex items-center gap-1">
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            <span id="plan-title-6">06 MESES COMPLETO S/ ADULTOS</span>
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+          </div>
+
+          <div class="mt-1 text-[11px] text-textMuted flex items-center gap-3">
+            <span>6 Meses</span>
+            <span>2 dispositivos simultâneos</span>
+          </div>
+
+          <span class="absolute right-3 bottom-3 bg-gray-700/80 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded" id="badge-6">
+            SELECIONE
+          </span>
+        </div>
+
+        <!-- Plano 12 meses (R$ 300,00) -->
+        <div id="card-plan-12" onclick="selectRenovacaoPlan(12, 300)" class="border border-cardBorder bg-cardInner rounded-xl p-4 cursor-pointer relative transition-all hover:border-accentBlue/50">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center" id="radio-outer-12">
+                <div class="w-2 h-2 rounded-full bg-transparent" id="radio-dot-12"></div>
+              </div>
+              <span class="text-xs text-textMuted font-medium" id="select-text-12">Clique para selecionar este plano</span>
+            </div>
+            <span class="text-sm font-extrabold text-accentBlue">R$ 300,00</span>
+          </div>
+
+          <div class="mt-3 font-bold text-xs text-white flex items-center gap-1">
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            <span id="plan-title-12">01 ANO COMPLETO S/ ADULTOS</span>
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+          </div>
+
+          <div class="mt-1 text-[11px] text-textMuted flex items-center gap-3">
+            <span>12 Meses</span>
+            <span>2 dispositivos simultâneos</span>
+          </div>
+
+          <span class="absolute right-3 bottom-3 bg-gray-700/80 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded" id="badge-12">
+            SELECIONE
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Resumo do Checkout e Total -->
+      <div class="pt-4 border-t border-cardBorder grid grid-cols-1 md:grid-cols-2 gap-6 items-end relative z-10">
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-textMuted">RESUMO DO CHECKOUT</div>
+          <div class="mt-2 font-bold text-sm text-white flex items-center gap-1" id="checkout-summary-title">
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+            <span>01 MÊS COMPLETO S/ ADULTOS</span>
+            <i class="fa-solid fa-gem text-accentBlue text-[10px]"></i>
+          </div>
+          <div class="text-xs text-textMuted mt-1 flex items-center gap-3">
+            <span id="checkout-summary-duration">1 Mês</span>
+            <span>2 dispositivos simultâneos</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-start md:items-end gap-2 relative z-10">
+          <div class="text-left md:text-right relative z-10">
+            <span class="block text-[10px] font-bold uppercase tracking-wider text-textMuted">TOTAL</span>
+            <span class="block text-2xl font-black text-accentBlue" id="checkout-summary-price">R$ 35,00</span>
+          </div>
+
+          <button onclick="handleRenovarClick()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-8 py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30 active:scale-95">
+            <i class="fa-solid fa-qrcode text-xs"></i>
+            Pagar com Pix / Gerar QR Code
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL / TELA DE PAGAMENTO PIX -->
+  <div id="payment-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-cardDark border border-cardBorder rounded-2xl max-w-lg w-full p-6 shadow-2xl relative my-8">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="flex items-center justify-between border-b border-cardBorder pb-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-brands fa-pix text-emerald-400 text-2xl"></i>
+          <h2 class="text-xl font-bold text-white">Pagamento via Pix</h2>
+        </div>
+        <button onclick="closePaymentModal()" class="text-textMuted hover:text-white text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Logomarca no Modal -->
+      <div class="flex justify-center mt-4">
+        <svg class="h-12 w-auto" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M595 195 L615 215 L215 615 L195 595 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <path d="M645 305 L665 325 L265 725 L245 705 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <path d="M445 405 L465 425 L365 525 L345 505 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <path d="M795 405 L815 425 L665 575 L645 555 Z" fill="#ffffff" fill-opacity="0.25"/>
+          <text x="500" y="730" font-family="'Arial Black', 'Impact', sans-serif" font-weight="900" font-size="115" fill="#DC2626" text-anchor="middle" letter-spacing="-2">JCSTREAM</text>
+        </svg>
+      </div>
+
+      <!-- Mensagem Orientativa -->
+      <div class="bg-blue-950/40 border border-blue-500/30 rounded-lg p-3 text-xs text-blue-200 mt-4 text-center">
+        Vá no banco de sua preferência e pague com QR Code ou copie o código Pix ou o Pix Celular.
+      </div>
+
+      <!-- Container do QR Code para Cada Valor Correspondente (35, 75, 150 e 300) -->
+      <div class="mt-4 bg-white p-4 rounded-xl flex flex-col items-center text-gray-900 space-y-2 max-w-xs mx-auto border border-gray-200 shadow-inner">
+        <div class="flex items-center gap-1 font-semibold text-xs text-sky-700">
+          <i class="fa-solid fa-building-columns"></i> PagBank
+        </div>
+        <div class="text-xs text-gray-500">Pague para</div>
+        <div class="font-extrabold text-sm text-center leading-tight">JULIO CESAR JACINTO DE ARAUJO</div>
+        
+        <!-- Renderizador do QR Code Específico por Valor -->
+        <div id="qrcode-container" class="py-2 flex justify-center items-center">
+          <img src="#" alt="#" id="qrcode-container-img">
+        </div>
+
+        <div class="text-2xl font-black text-gray-900" id="modal-qr-price">R$ 35,00</div>
+        <div class="text-[11px] text-gray-500 text-center">Pague lendo o QR code no app do seu banco</div>
+      </div>
+
+      <!-- Chave Pix Celular / Copia e Cola -->
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-textMuted uppercase">Chave Pix Celular</label>
+          <div class="flex items-center gap-2 mt-1">
+            <input type="text" readonly value="62996771902" class="bg-cardInner border border-cardBorder rounded-lg px-3 py-2 text-xs text-white w-full font-mono">
+            <button onclick="copyToClipboard('62996771902')" class="bg-cardBorder hover:bg-gray-700 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i> Copiar
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-textMuted uppercase">Código Pix Copia e Cola</label>
+          <div class="flex items-center gap-2 mt-1">
+            <input id="pix-code-input" type="text" readonly value="" class="bg-cardInner border border-cardBorder rounded-lg px-3 py-2 text-xs text-white w-full font-mono truncate">
+            <button onclick="copyPixCode()" class="bg-cardBorder hover:bg-gray-700 text-white text-xs px-3 py-2 rounded-lg font-medium flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i> Copiar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção Enviar Comprovante no WhatsApp -->
+      <div class="mt-6 border-t border-cardBorder pt-4 space-y-3">
+        <label class="block text-xs font-bold text-emerald-400">
+          <i class="fa-solid fa-paperclip"></i> Anexar/Enviar comprovante para o vendedor:
+        </label>
+
+        <button onclick="sendReceiptToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30 active:scale-95">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          Encaminhar Comprovante no WhatsApp
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript Interativo e Mapeamento dos QR Codes dos 4 Valores das Imagens -->
+  <script>
+    let hasAdult = false;
+    let selectedMonths = 1;
+    const basePrices = {
+      1: 35,
+      3: 75,
+      6: 150,
+      12: 300
+    };
+
+    // Códigos Copia e Cola do Pix PagBank para cada valor exato
+    const pixCodes = {
+      35: "00020126820014br.gov.bcb.pix013653bcc416-9c17-4ca3-b6e0-404f4a2b2c410220obrigado pela compra27600016BR.COM.PAGSEGURO0136E27FB1D2-0BAD-4826-A91A-2F4CE56D9846520489995303986540535.005802BR5925JULIO CESAR JACINTO DE AR6008Anapolis62290525PAGS0000035002608121047106304C076",
+      75: "00020126580014br.gov.bcb.pix013653bcc416-9c17-4ca3-b6e0-404f4a2b2c4127600016BR.COM.PAGSEGURO013629B64E51-BF0A-4D24-9D09-816E61D4DC95520489995303986540575.005802BR5925JULIO CESAR JACINTO DE AR6008Anapolis62290525PAGS0000075002608121049736304459A",
+      150: "00020126580014br.gov.bcb.pix013653bcc416-9c17-4ca3-b6e0-404f4a2b2c4127600016BR.COM.PAGSEGURO0136D61C6F42-4581-4546-9879-244C25FF9D985204899953039865406150.005802BR5925JULIO CESAR JACINTO DE AR6008Anapolis62290525PAGS0000150002608121050776304CEB4",
+      300: "00020126820014br.gov.bcb.pix013653bcc416-9c17-4ca3-b6e0-404f4a2b2c410220obrigado pela compra27600016BR.COM.PAGSEGURO01368AEAA5E8-D5BB-4BB5-B079-EF5B34BEA3025204899953039865406300.005802BR5925JULIO CESAR JACINTO DE AR6008Anapolis62290525PAGS00003000026081210507163045C7D"
+    };
+
+    // Função que renderiza o QR Code SVG vetorial exato e funcional para o valor de R$ 35, R$ 75, R$ 150 ou R$ 300
+    function getQrCodeSVGForPrice(price) {
+      const qr = new QRious({
+        value: pixCodes[price],
+        size: 300,
+        level: 'M'
+      });
+
+      // Retorna a string Base64 (Data URL) diretamente
+      const base64 = qr.toDataURL();
+      document.getElementById('qrcode-container-img').src = base64;
+    }
+
+    function setAdultContent(isAdult) {
+      hasAdult = isAdult;
+      const padraoBtn = document.getElementById('filter-padrao');
+      const adultoBtn = document.getElementById('filter-adulto');
+      
+      if (isAdult) {
+        adultoBtn.className = "bg-cardInner border-2 border-accentBlue rounded-lg p-3 cursor-pointer transition-all";
+        padraoBtn.className = "bg-cardInner border border-cardBorder hover:border-accentBlue/50 rounded-lg p-3 cursor-pointer transition-all";
+      } else {
+        padraoBtn.className = "bg-cardInner border-2 border-accentBlue rounded-lg p-3 cursor-pointer transition-all";
+        adultoBtn.className = "bg-cardInner border border-cardBorder hover:border-accentBlue/50 rounded-lg p-3 cursor-pointer transition-all";
+      }
+
+      updatePlanTitles();
+    }
+
+    function selectPlanType(type) {
+      const withAdultEl = document.getElementById('plan-type-with-adult');
+      const noAdultEl = document.getElementById('plan-type-no-adult');
+
+      if (type === 'with_adult') {
+        withAdultEl.className = "bg-cardInner border-2 border-accentBlue rounded-lg p-3 cursor-pointer transition-all";
+        noAdultEl.className = "bg-cardInner border border-cardBorder hover:border-accentBlue/50 cursor-pointer rounded-lg p-3 transition-all";
+        setAdultContent(true);
+      } else {
+        noAdultEl.className = "bg-cardInner border-2 border-accentBlue rounded-lg p-3 cursor-pointer transition-all";
+        withAdultEl.className = "bg-cardInner border border-cardBorder hover:border-accentBlue/50 cursor-pointer rounded-lg p-3 transition-all";
+        setAdultContent(false);
+      }
+    }
+
+    function updatePlanTitles() {
+      const suffix = hasAdult ? "C/ ADULTOS" : "S/ ADULTOS";
+      document.getElementById('plan-title-1').innerText = `01 MÊS COMPLETO ${suffix}`;
+      document.getElementById('plan-title-3').innerText = `03 MESES COMPLETO ${suffix}`;
+      document.getElementById('plan-title-6').innerText = `06 MESES COMPLETO ${suffix}`;
+      document.getElementById('plan-title-12').innerText = `01 ANO COMPLETO ${suffix}`;
+
+      updateCheckoutSummary();
+    }
+
+    function selectRenovacaoPlan(months, price) {
+      selectedMonths = months;
+      const allMonths = [1, 3, 6, 12];
+      
+      allMonths.forEach(m => {
+        const card = document.getElementById(`card-plan-${m}`);
+        const radioOuter = document.getElementById(`radio-outer-${m}`);
+        const radioDot = document.getElementById(`radio-dot-${m}`);
+        const selectText = document.getElementById(`select-text-${m}`);
+        const badge = document.getElementById(`badge-${m}`);
+
+        if (m === months) {
+          card.className = "border-2 border-accentBlue bg-cardInner/60 rounded-xl p-4 cursor-pointer relative transition-all";
+          if (radioOuter) radioOuter.className = "w-4 h-4 rounded-full border-2 border-accentBlue flex items-center justify-center";
+          if (radioDot) radioDot.className = "w-2 h-2 rounded-full bg-accentBlue";
+          if (selectText) selectText.innerText = "Plano selecionado";
+          if (badge) {
+            badge.className = "absolute right-3 bottom-3 bg-accentBlue text-white text-[10px] font-bold px-2 py-0.5 rounded";
+            badge.innerText = "SELECIONADO";
+          }
+        } else {
+          card.className = "border border-cardBorder bg-cardInner rounded-xl p-4 cursor-pointer relative transition-all hover:border-accentBlue/50";
+          if (radioOuter) radioOuter.className = "w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center";
+          if (radioDot) radioDot.className = "w-2 h-2 rounded-full bg-transparent";
+          if (selectText) selectText.innerText = "Clique para selecionar este plano";
+          if (badge) {
+            badge.className = "absolute right-3 bottom-3 bg-gray-700/80 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded";
+            badge.innerText = "SELECIONE";
+          }
+        }
+      });
+
+      updateCheckoutSummary();
+    }
+
+    function updateCheckoutSummary() {
+      const suffix = hasAdult ? "C/ ADULTOS" : "S/ ADULTOS";
+      let name = "";
+      let duration = "";
+      let price = basePrices[selectedMonths];
+
+      if (selectedMonths === 1) {
+        name = `01 MÊS COMPLETO ${suffix}`;
+        duration = "1 Mês";
+      } else if (selectedMonths === 3) {
+        name = `03 MESES COMPLETO ${suffix}`;
+        duration = "3 Meses";
+      } else if (selectedMonths === 6) {
+        name = `06 MESES COMPLETO ${suffix}`;
+        duration = "6 Meses";
+      } else if (selectedMonths === 12) {
+        name = `01 ANO COMPLETO ${suffix}`;
+        duration = "12 Meses";
+      }
+
+      document.querySelector('#checkout-summary-title span').innerText = name;
+      document.getElementById('checkout-summary-duration').innerText = duration;
+      document.getElementById('checkout-summary-price').innerText = `R$ ${price},00`;
+    }
+
+    function scrollToRenewal() {
+      document.getElementById('renovacao-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleRenovarClick() {
+      const price = basePrices[selectedMonths];
+      document.getElementById('modal-qr-price').innerText = `R$ ${price},00`;
+      
+      const code = pixCodes[price] || pixCodes[35];
+      document.getElementById('pix-code-input').value = code;
+
+      // Injeta o QR Code exato referente ao valor do plano selecionado
+      getQrCodeSVGForPrice(price);
+      document.getElementById('payment-modal').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').classList.add('hidden');
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Chave Pix copiada com sucesso!");
+      }).catch(err => {
+        alert("Chave Pix: " + text);
+      });
+    }
+
+    function copyPixCode() {
+      const codeInput = document.getElementById('pix-code-input');
+      codeInput.select();
+      navigator.clipboard.writeText(codeInput.value).then(() => {
+        alert("Código Pix Copia e Cola copiado com sucesso!");
+      });
+    }
+
+    function sendReceiptToWhatsApp() {
+      const price = basePrices[selectedMonths];
+      const suffix = hasAdult ? "C/ ADULTOS" : "S/ ADULTOS";
+      const message = encodeURIComponent(`Olá! Acabei de realizar o pagamento do plano de R$ ${price},00 (${selectedMonths} Mês/Meses ${suffix}). Segue em anexo o meu comprovante de pagamento.`);
+      window.open(`http://wa.me/62996771902?text=${message}`, '_blank');
+    }
+
+    // --- Animação de Fundo ---
+    function createVpnBackground() {
+      const background = document.getElementById('vpn-background');
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      const centralNode = document.createElement('div');
+      centralNode.className = 'absolute bg-accentBlue rounded-full z-0 central-node-pulsing';
+      centralNode.style.width = '30px';
+      centralNode.style.height = '30px';
+      centralNode.style.left = `${centerX - 15}px`;
+      centralNode.style.top = `${centerY - 15}px`;
+      background.appendChild(centralNode);
+
+      const numLines = 40; 
+
+      for (let i = 0; i < numLines; i++) {
+        const line = document.createElement('div');
+        line.className = 'line';
+
+        const length = Math.random() * (Math.max(window.innerWidth, window.innerHeight) / 1.5) + 100;
+        const angle = Math.random() * 360;
+        const width = Math.random() * 2 + 2;
+
+        line.style.width = `${length}px`;
+        line.style.height = `${width}px`;
+        line.style.left = `${centerX}px`;
+        line.style.top = `${centerY}px`;
+        line.style.transform = `rotate(${angle}deg) scaleX(0)`; 
+
+        background.appendChild(line);
+
+        const connectionDelay = Math.random() * 2000;
+        const connectionDuration = 1500 + Math.random() * 1000;
+
+        setTimeout(() => {
+          line.style.transition = `transform ${connectionDuration}ms ease-out, opacity ${connectionDuration}ms ease-out`;
+          line.style.opacity = '1';
+          line.style.transform = `rotate(${angle}deg) scaleX(1)`;
+        }, connectionDelay);
+
+        const startLightPulse = connectionDelay + connectionDuration;
+
+        setTimeout(() => {
+          line.classList.add('light-pulse');
+        }, startLightPulse);
+      }
+    }
+
+    window.onload = createVpnBackground;
+    window.onresize = () => {
+      document.getElementById('vpn-background').innerHTML = '';
+      createVpnBackground();
+    };
+  </script>
+</body>
+</html>
